@@ -1,0 +1,3 @@
+{
+  "watch": ["src", "package.json"]
+}
