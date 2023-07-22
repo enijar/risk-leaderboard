@@ -36,8 +36,8 @@ const fs = __importStar(require("node:fs/promises"));
 const path = __importStar(require("node:path"));
 const node_html_parser_1 = require("node-html-parser");
 const cli_progress_1 = require("cli-progress");
-const MAX_PAGE = 100;
-const PAGINATION_DELAY = 1000;
+const MAX_PAGE = 50;
+const PAGINATION_DELAY = 1500;
 const LEADERBOARD_FILE = path.resolve(__dirname, "..", "data", "leaderboard.json");
 function htmlFromUrl(url) {
     return __awaiter(this, void 0, void 0, function* () {
