@@ -4,8 +4,8 @@ import { parse, type HTMLElement } from "node-html-parser";
 import { SingleBar } from "cli-progress";
 
 const MAX_PAGE = 100;
-const PAGINATION_DELAY = 1500;
-const USERS_FILE_PATH = path.resolve(__dirname, "..", "data", "users.json");
+const PAGINATION_DELAY = 3000;
+const LEADERBOARD_FILE = path.resolve(__dirname, "..", "data", "leaderboard.json");
 
 async function htmlFromUrl(url: string) {
   const res = await fetch(url);
@@ -19,20 +19,21 @@ function usersFromHtml(html: HTMLElement) {
   const rows = html.querySelectorAll("table > tbody > tr");
   return rows.map((element) => {
     const col1 = element.querySelector("td:nth-child(1)");
-    const col2 = element.querySelector("td:nth-child(2) > a");
+    const col2 = element.querySelector("td:nth-child(2)");
     const col3 = element.querySelector("td:nth-child(3)");
     return {
-      position: parseFloat((col1?.textContent ?? "0").replace(/\D+/, "")),
-      username: col2?.textContent ?? "",
-      link: col2?.getAttribute("href") ?? "",
+      position: parseInt((col1?.textContent ?? "0").replace(/\D+/, "")),
+      username: col2?.querySelector("a")?.textContent ?? "",
+      image: col2?.querySelector("img")?.getAttribute("src") ?? "",
+      link: col2?.querySelector("a")?.getAttribute("href") ?? "",
       points: col3?.textContent,
     };
   });
 }
 
-async function saveUsers(users: ReturnType<typeof usersFromHtml>) {
-  const existingUsers = JSON.parse(await fs.readFile(USERS_FILE_PATH, "utf8"));
-  await fs.writeFile(USERS_FILE_PATH, JSON.stringify([...existingUsers, ...users], null, 2), "utf8");
+async function saveLeaderboard(users: ReturnType<typeof usersFromHtml>) {
+  const existingUsers = JSON.parse(await fs.readFile(LEADERBOARD_FILE, "utf8"));
+  await fs.writeFile(LEADERBOARD_FILE, JSON.stringify([...existingUsers, ...users], null, 2), "utf8");
 }
 
 const progress = new SingleBar({});
@@ -41,7 +42,7 @@ progress.start(MAX_PAGE, 0);
 
 async function main(page = 1) {
   if (page === 1) {
-    await fs.writeFile(USERS_FILE_PATH, JSON.stringify([]), "utf8");
+    await fs.writeFile(LEADERBOARD_FILE, JSON.stringify([]), "utf8");
   }
   if (page > MAX_PAGE) {
     progress.stop();
@@ -51,7 +52,7 @@ async function main(page = 1) {
   const html = await htmlFromUrl(`https://www.hasbrorisk.com/en/leaderboard/2/1/rankPoints/${page}`);
   if (html !== null) {
     const users = usersFromHtml(html);
-    await saveUsers(users);
+    await saveLeaderboard(users);
   }
   progress.update(page);
   await new Promise((resolve) => setTimeout(resolve, PAGINATION_DELAY));

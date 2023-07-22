@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Risk Leaderboard</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --background: #f0f0f0;
+        --foreground: #1e1e1e;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: #1e1e1e;
+          --foreground: #f0f0f0;
+        }
+      }
+
+      html,
+      body {
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: hidden;
+      }
+
+      html {
+        font-size: 100%;
+        font-family: system-ui, sans-serif;
+        line-height: 1.2;
+        background-color: var(--background);
+        color: var(--foreground);
+        color-scheme: light dark;
+      }
+
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-block-end: 2em;
+      }
+
+      a {
+        color: lightblue;
+      }
+
+      table {
+        inline-size: 100%;
+      }
+
+      table tr td {
+        padding-block-end: 0.5em;
+        text-align: left;
+      }
+
+      table tr th {
+        padding-block-end: 0.5em;
+        text-align: left;
+      }
+
+      main {
+        inline-size: 100%;
+        max-inline-size: 1200px;
+        margin-inline: auto;
+      }
+
+      img {
+        display: block;
+        max-inline-size: 50px;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        background-color: var(--background);
+        padding-block: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+
+      input {
+        display: block;
+        block-size: 2em;
+        padding-inline: 0.5em;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Risk Leaderboard</h1>
+        <nav>
+          <button id="first">First</button>
+          <button id="prev">Prev</button>
+          <button id="next">Next</button>
+          <button id="last">Last</button>
+          <form id="search">
+            <input type="text" name="query" placeholder="Search a username..." />
+          </form>
+        </nav>
+      </header>
+      <table>
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Username</th>
+            <th>Image</th>
+            <th>Profile Link</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard"></tbody>
+      </table>
+    </main>
+    <script>
+      const leaderboard = document.querySelector("#leaderboard");
+
+      const PER_PAGE = 100;
+      const MAX_PAGE = 100;
+
+      /**
+       * @type {{position: Number, username: String, image: String, link: String, points: String}[]}
+       */
+      let users = [];
+      let currentPage = 1;
+
+      /**
+       * @returns {Promise<{position: Number, username: String, image: String, link: String, points: String}[]>}
+       */
+      async function fetchUsers() {
+        const res = await fetch("leaderboard.json");
+        return res.json();
+      }
+
+      function renderRows() {
+        if (currentPage > MAX_PAGE) {
+          // This should never happen, but prevent errors if it does by exiting
+          return;
+        }
+        const index = PER_PAGE * (currentPage - 1);
+        const rows = users.slice(index, index + PER_PAGE).map((user) => {
+          return `<tr>
+<td>${user.position}</td>
+<td>${user.username}</td>
+<td><img src="${user.image}" alt="${user.username}"/></td>
+<td><a href="${user.link}" target="_blank" rel="noreferrer">View Profile</a></td>
+<td>${user.points}</td>
+</tr>`;
+        });
+        leaderboard.innerHTML = rows.join("");
+      }
+
+      // todo: handle errors
+      fetchUsers()
+        .then((res) => {
+          users = res;
+          renderRows(currentPage);
+        })
+        .catch(console.error);
+
+      const first = document.querySelector("#first");
+      const prev = document.querySelector("#prev");
+      const next = document.querySelector("#next");
+      const last = document.querySelector("#last");
+      const search = document.querySelector("#search");
+
+      first.addEventListener("click", () => {
+        currentPage = 1;
+        renderRows();
+      });
+
+      prev.addEventListener("click", () => {
+        currentPage = Math.max(1, currentPage - 1);
+        renderRows();
+      });
+
+      next.addEventListener("click", () => {
+        currentPage = Math.min(MAX_PAGE, currentPage + 1);
+        renderRows();
+      });
+
+      last.addEventListener("click", () => {
+        currentPage = MAX_PAGE;
+        renderRows();
+      });
+
+      search.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const query = (data.get("query") ?? "").toLowerCase();
+        if (query.length === 0) {
+          renderRows();
+          return;
+        }
+        const matches = users.filter((user) => {
+          return user.username.toLowerCase().includes(query);
+        });
+        const rows = matches.map((user) => {
+          return `<tr>
+<td>${user.position}</td>
+<td>${user.username}</td>
+<td><img src="${user.image}" alt="${user.username}"/></td>
+<td><a href="${user.link}" target="_blank" rel="noreferrer">View Profile</a></td>
+<td>${user.points}</td>
+</tr>`;
+        });
+        if (matches.length > 0) {
+          leaderboard.innerHTML = rows.join("");
+        } else {
+          leaderboard.innerHTML = `<tr>
+<td colspan="5">No user found for username "${query}"</td>
+</tr>`;
+        }
+      });
+    </script>
+  </body>
+</html>
