@@ -1,11 +1,10 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { parse, type HTMLElement } from "node-html-parser";
-import { unionBy, orderBy } from "lodash";
 import { SingleBar } from "cli-progress";
 
 const MAX_PAGE = 100;
-const PAGINATION_DELAY = 3000;
+const PAGINATION_DELAY = 1500;
 const USERS_FILE_PATH = path.resolve(__dirname, "..", "data", "users.json");
 
 async function htmlFromUrl(url: string) {
@@ -23,7 +22,7 @@ function usersFromHtml(html: HTMLElement) {
     const col2 = element.querySelector("td:nth-child(2) > a");
     const col3 = element.querySelector("td:nth-child(3)");
     return {
-      position: parseFloat(col1?.textContent ?? "0"),
+      position: parseFloat((col1?.textContent ?? "0").replace(/\D+/, "")),
       username: col2?.textContent ?? "",
       link: col2?.getAttribute("href") ?? "",
       points: col3?.textContent,
