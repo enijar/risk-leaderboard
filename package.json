@@ -3,7 +3,8 @@
   "name": "risk-api-scraper",
   "version": "0.0.0",
   "scripts": {
-    "start": "nodemon src/index.ts"
+    "start": "nodemon src/index.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
