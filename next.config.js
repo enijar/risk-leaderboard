@@ -6,6 +6,7 @@ const nextConfig = {
     styledComponents: true,
   },
   swcMinify: true,
+  assetPrefix: "./",
 };
 
 module.exports = nextConfig;
