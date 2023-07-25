@@ -1,18 +1,26 @@
 {
+  "name": "app",
+  "version": "0.1.0",
   "private": true,
-  "name": "risk-api-scraper",
-  "version": "0.0.0",
   "scripts": {
-    "start": "nodemon src/index.ts",
-    "build": "tsc"
+    "dev": "next dev",
+    "build": "next build",
+    "build-cli": "tsc src/cli/update-leaderboard.ts --moduleResolution nodenext --outDir cli",
+    "start": "next start"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
-    "nodemon": "^3.0.1",
-    "prettier": "^3.0.0",
-    "ts-node": "^10.9.1"
+    "prettier": "^3.0.0"
   },
   "dependencies": {
+    "@types/node": "20.4.4",
+    "@types/react": "18.2.16",
+    "@types/react-dom": "18.2.7",
+    "next": "13.4.12",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "styled-components": "^6.0.5",
+    "typescript": "5.1.6",
     "cli-progress": "^3.12.0",
     "node-html-parser": "^6.1.5"
   }

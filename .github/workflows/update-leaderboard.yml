@@ -32,15 +32,9 @@ jobs:
 
       - name: Build
         run: |
+          npm run build-cli
           npm run build
-
-      - name: Update Leaderboard
-        run: |
-          node build/index.js
-
-      - name: Copy Files
-        run: |
-          cp src/index.html build/index.html
+          node cli/update-leaderboard.js
           cp data/leaderboard.json build/leaderboard.json
 
       - name: Deploy

@@ -5,11 +5,9 @@ the [Risk leaderboard](https://www.hasbrorisk.com/en/leaderboard/2/1/rankPoints/
 
 ### Getting Started
 
-Install and run the scraper:
+Install and run app in dev mode:
 
 ```shell
 npm install
-npm start
+npm run dev
 ```
-
-Once finished the leaderboard will be saved to `data/leaderboard.json`.

@@ -1,3 +1,7 @@
-build/
-node_modules/
-src/leaderboard.json
+/build
+/.next
+/node_modules
+/cli
+.DS_Store
+npm-debug.log*
+next-env.d.ts
