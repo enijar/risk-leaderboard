@@ -35,6 +35,7 @@ jobs:
         run: |
           npm run build-cli
           npm run build
+          touch .nojekyll build/.nojekyll
           node cli/update-leaderboard.js
           cp data/leaderboard.json build/leaderboard.json
 
