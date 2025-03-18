@@ -19,7 +19,7 @@ export default function Home() {
   const [users, setUsers] = React.useState<User[]>([]);
 
   React.useEffect(() => {
-    fetch("leaderboard.json")
+    fetch(`leaderboard.json?t=${Date.now()}`)
       .then((res) => res.json())
       .then(setUsers)
       .catch(console.error);
