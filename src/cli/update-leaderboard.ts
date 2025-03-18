@@ -4,7 +4,7 @@ import { parse, type HTMLElement } from "node-html-parser";
 import { SingleBar } from "cli-progress";
 
 const MAX_PAGE = 100;
-const PAGINATION_DELAY = 3000;
+const PAGINATION_DELAY = 1500;
 const LEADERBOARD_FILE = path.resolve(__dirname, "..", "data", "leaderboard.json");
 
 async function htmlFromUrl(url: string) {
