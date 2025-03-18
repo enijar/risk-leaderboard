@@ -9,17 +9,17 @@ on:
     branches:
       - main
     paths:
-      - "src/cli/update-leaderboard.ts"
+      - "src/**"
       - "package.json"
-      - ".github/workflows/update-leaderboard.yml"
+      - "next.config.ts"
+      - ".github/workflows/gh-pages.yml"
 
   schedule:
     - cron: "0 */1 * * *"
 
 jobs:
-  update-leaderboard:
+  gh-pages:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     permissions:
       pages: write
@@ -37,23 +37,19 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Build CLI
-        run: npm run build-cli
-
-      - name: Update Leaderboard
-        run: node cli/update-leaderboard.js
-
-      - name: Prepare Build Directory
+      - name: Build
         run: |
-          mkdir -p build
+          npm run build-cli
+          npm run build
+          touch .nojekyll build/.nojekyll
+          node cli/update-leaderboard.js
           cp data/leaderboard.json build/leaderboard.json
-          touch build/.nojekyll
 
-      - name: Upload Updated Leaderboard
+      - name: Upload
         uses: actions/upload-pages-artifact@v3
         with:
           path: build
 
-      - name: Deploy Updated Leaderboard
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
