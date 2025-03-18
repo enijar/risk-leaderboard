@@ -35,6 +35,10 @@ export default function Home() {
     return users.filter((user) => user.username.toLowerCase().startsWith(query)).slice(index, index + PER_PAGE);
   }, [users, page, usernameQuery]);
 
+  React.useEffect(() => {
+    setPage(1);
+  }, [usernameQuery]);
+
   return (
     <main>
       <header>
