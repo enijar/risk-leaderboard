@@ -37,12 +37,16 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Build
+      - name: Build CLI
+        run: npm run build-cli
+
+      - name: Update Leaderboard
+        run: node cli/update-leaderboard.js
+
+      - name: Build Site
         run: |
-          npm run build-cli
           npm run build
           touch .nojekyll build/.nojekyll
-          node cli/update-leaderboard.js
           cp data/leaderboard.json build/leaderboard.json
 
       - name: Upload
