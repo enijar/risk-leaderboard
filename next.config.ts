@@ -1,12 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   output: "export",
   distDir: "build",
   compiler: {
     styledComponents: true,
   },
-  swcMinify: true,
   assetPrefix: "./",
 };
 
-module.exports = nextConfig;
+export default nextConfig;

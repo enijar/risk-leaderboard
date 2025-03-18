@@ -1,27 +1,25 @@
 {
-  "name": "app",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build-cli": "tsc src/cli/update-leaderboard.ts --moduleResolution nodenext --outDir cli",
+    "build-cli": "tsc src/cli/update-leaderboard.ts --module NodeNext --moduleResolution NodeNext --outDir cli",
     "start": "next start"
   },
   "devDependencies": {
-    "@types/cli-progress": "^3.11.0",
-    "prettier": "^3.0.0"
+    "@types/cli-progress": "3.11.6",
+    "prettier": "3.5.3"
   },
   "dependencies": {
-    "@types/node": "20.4.4",
-    "@types/react": "18.2.16",
-    "@types/react-dom": "18.2.7",
-    "next": "13.4.12",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "styled-components": "^6.0.5",
-    "typescript": "5.1.6",
-    "cli-progress": "^3.12.0",
-    "node-html-parser": "^6.1.5"
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.11",
+    "@types/react-dom": "19.0.4",
+    "cli-progress": "3.12.0",
+    "next": "15.2.3",
+    "node-html-parser": "7.0.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "styled-components": "6.1.16",
+    "typescript": "5.8.2"
   }
 }
