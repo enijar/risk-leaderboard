@@ -1,6 +1,31 @@
 "use client";
 
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
+
+export const FavouriteButton = styled.button`
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: block;
+  padding: 0.5em;
+  svg {
+    transition: fill 200ms linear;
+  }
+  &[aria-selected="true"] {
+    svg {
+      fill: rgba(255, 255, 255, 1);
+    }
+  }
+  &[aria-selected="false"] {
+    &:hover,
+    &:focus-visible {
+      svg {
+        fill: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+`;
 
 export const AppReset = createGlobalStyle`
   :root {
@@ -105,5 +130,8 @@ export const AppReset = createGlobalStyle`
 
   h1 {
     font-size: 2em;
+    small {
+      font-size: 0.5em;
+    }
   }
 `;

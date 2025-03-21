@@ -17,18 +17,35 @@ async function htmlFromUrl(url: string) {
 
 function usersFromHtml(html: HTMLElement) {
   const rows = html.querySelectorAll("table > tbody > tr");
-  return rows.map((element) => {
-    const col1 = element.querySelector("td:nth-child(1)");
-    const col2 = element.querySelector("td:nth-child(2)");
-    const col3 = element.querySelector("td:nth-child(3)");
-    return {
-      position: parseInt((col1?.textContent ?? "0").replace(/\D+/, "")),
-      username: col2?.querySelector("a")?.textContent ?? "",
-      image: col2?.querySelector("img")?.getAttribute("src") ?? "",
-      link: col2?.querySelector("a")?.getAttribute("href") ?? "",
-      points: col3?.textContent,
-    };
-  });
+  return rows
+    .map((element) => {
+      const col1 = element.querySelector("td:nth-child(1)");
+      const col2 = element.querySelector("td:nth-child(2)");
+      const col3 = element.querySelector("td:nth-child(3)");
+      try {
+        const link = col2?.querySelector("a")?.getAttribute("href") ?? "";
+        const url = new URL(link);
+        const segments = url.pathname.split("/");
+        const id = segments[segments.length - 1];
+        if (id === undefined) {
+          return null;
+        }
+        return {
+          id,
+          position: parseInt((col1?.textContent ?? "0").replace(/\D+/, "")),
+          username: col2?.querySelector("a")?.textContent ?? "",
+          image: col2?.querySelector("img")?.getAttribute("src") ?? "",
+          link,
+          points: col3?.textContent,
+        };
+      } catch (err) {
+        console.error(err);
+        return null;
+      }
+    })
+    .filter((user) => {
+      return user !== null;
+    });
 }
 
 async function saveLeaderboard(users: ReturnType<typeof usersFromHtml>) {
