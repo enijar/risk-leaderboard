@@ -57,6 +57,7 @@ export default function Home() {
       <header>
         <h1>
           Risk Leaderboard <small>(Updated Hourly)</small>
+          <span>&nbsp;</span>
         </h1>
         <nav>
           {favourites.length > 0 && (
