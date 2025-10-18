@@ -12,6 +12,7 @@ on:
       - "src/**"
       - "package.json"
       - "next.config.ts"
+      - ".github/workflows/update-leaderboard.yml"
 
   schedule:
     - cron: "0 */1 * * *"
