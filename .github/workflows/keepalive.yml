@@ -3,6 +3,7 @@ name: Keepalive Workflow
 on:
   schedule:
     - cron: "0 0 1,15 * *"  # Runs 1st and 15th of each month
+  workflow_dispatch:
 
 jobs:
   keepalive:
