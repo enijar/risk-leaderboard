@@ -8,20 +8,22 @@
   },
   "devDependencies": {
     "@types/cli-progress": "3.11.6",
-    "prettier": "3.5.3"
+    "prettier": "3.8.1"
   },
   "dependencies": {
-    "@types/node": "22.13.11",
-    "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4",
+    "@types/node": "25.3.5",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "cli-progress": "3.12.0",
-    "idb-keyval": "6.2.1",
-    "next": "15.2.3",
-    "node-html-parser": "7.0.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "styled-components": "6.1.16",
-    "typescript": "5.8.2",
-    "zustand": "5.0.3"
+    "dotenv": "^17.3.1",
+    "idb-keyval": "6.2.2",
+    "next": "16.1.6",
+    "node-html-parser": "7.1.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "socks-proxy-agent": "^8.0.5",
+    "styled-components": "6.3.11",
+    "typescript": "5.9.3",
+    "zustand": "5.0.11"
   }
 }

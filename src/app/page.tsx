@@ -5,8 +5,14 @@ import * as AppStyle from "@/components/app-styles";
 import { favouriteState } from "@/state/favourite-state";
 import { userState } from "@/state/user-state";
 import FavouriteIcon from "@/icons/favourite-icon";
+import { LeaderboardData } from "@/types";
 
 const PER_PAGE = 100;
+
+function formatUpdatedAt(iso: string): string {
+  const date = new Date(iso);
+  return `Updated ${date.toLocaleString()}`;
+}
 
 export default function Home() {
   const [page, setPage] = React.useState(1);
@@ -16,10 +22,11 @@ export default function Home() {
   }, [usernameQuery]);
 
   const users = userState((state) => state.users);
+  const updatedAt = userState((state) => state.updatedAt);
   React.useEffect(() => {
     fetch(`leaderboard.json?t=${Date.now()}`)
       .then((res) => res.json())
-      .then(userState.getState().setUsers)
+      .then((data: LeaderboardData) => userState.getState().setLeaderboard(data))
       .catch(console.error);
   }, []);
   React.useEffect(() => {
@@ -28,6 +35,10 @@ export default function Home() {
 
   const maxPage = React.useMemo(() => {
     return Math.ceil(users.length / PER_PAGE);
+  }, [users]);
+
+  const onlineCount = React.useMemo(() => {
+    return users.filter((u) => u.online).length;
   }, [users]);
 
   const favourites = favouriteState((state) => state.favourites);
@@ -56,7 +67,16 @@ export default function Home() {
     <main>
       <header>
         <h1>
-          Risk Leaderboard <small>(Updated Hourly)</small>
+          Risk Leaderboard{" "}
+          <small>
+            {updatedAt ? formatUpdatedAt(updatedAt) : "(Updated Hourly)"}
+            {onlineCount > 0 && (
+              <span style={{ display: "inline-flex", alignItems: "center", marginInlineStart: "0.75em" }}>
+                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", backgroundColor: "#22c55e", marginInlineEnd: "0.3em", verticalAlign: "middle" }} />
+                {onlineCount} online
+              </span>
+            )}
+          </small>
         </h1>
         <nav>
           {favourites.length > 0 && (
@@ -93,7 +113,20 @@ export default function Home() {
             return (
               <tr key={user.position}>
                 <td>{user.position}</td>
-                <td>{user.username}</td>
+                <td>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      backgroundColor: user.online ? "#22c55e" : "#6b7280",
+                      marginInlineEnd: "0.5em",
+                      verticalAlign: "middle",
+                    }}
+                  />
+                  {user.username}
+                </td>
                 <td>
                   <img src={user.image} alt={user.username} />
                 </td>

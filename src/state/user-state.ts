@@ -1,16 +1,18 @@
 import { create } from "zustand/react";
-import { User } from "@/types";
+import { User, LeaderboardData } from "@/types";
 
 type UserState = {
   users: User[];
-  setUsers(users: User[]): void;
+  updatedAt: string | null;
+  setLeaderboard(data: LeaderboardData): void;
 };
 
 export const userState = create<UserState>((setState) => {
   return {
     users: [],
-    setUsers(users) {
-      setState({ users });
+    updatedAt: null,
+    setLeaderboard(data) {
+      setState({ users: data.users, updatedAt: data.updatedAt });
     },
   };
 });

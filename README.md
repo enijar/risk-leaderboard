@@ -8,6 +8,7 @@ the [Risk leaderboard](https://www.hasbrorisk.com/en/leaderboard/2/1/rankPoints/
 Install and run app in dev mode:
 
 ```shell
+cp .env.example .env
 npm install
 npm run dev
 ```

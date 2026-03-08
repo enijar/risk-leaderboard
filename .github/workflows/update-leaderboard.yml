@@ -42,6 +42,10 @@ jobs:
 
       - name: Update Leaderboard
         run: node cli/update-leaderboard.js
+        env:
+          PROXY_USERNAME: ${{ secrets.PROXY_USERNAME }}
+          PROXY_PASSWORD: ${{ secrets.PROXY_PASSWORD }}
+          PROXY_PORT: ${{ secrets.PROXY_PORT }}
 
       - name: Build Site
         run: |
