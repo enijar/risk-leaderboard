@@ -7,6 +7,30 @@ import { SingleBar } from "cli-progress";
 import { SocksProxyAgent } from "socks-proxy-agent";
 
 const MAX_PAGE = 100;
+
+function createProgress(label: string) {
+  if (process.stdout.isTTY && !process.env.CI) {
+    return new SingleBar({ format: `${label} [{bar}] {percentage}% | {value}/{total}` });
+  }
+  let total = 0;
+  let lastPct = -1;
+  return {
+    start(t: number, _initial: number) {
+      total = t;
+      console.log(`${label}: starting (${total} items)`);
+    },
+    update(value: number) {
+      const pct = Math.floor((value / total) * 100);
+      if (pct >= lastPct + 10) {
+        lastPct = pct;
+        console.log(`${label}: ${value}/${total} (${pct}%)`);
+      }
+    },
+    stop() {
+      console.log(`${label}: done`);
+    },
+  };
+}
 const LEADERBOARD_FILE = path.resolve(__dirname, "..", "data", "leaderboard.json");
 
 const NORDVPN_API = "https://api.nordvpn.com/v1/servers";
@@ -229,9 +253,7 @@ async function main() {
       await new Promise((resolve) => setTimeout(resolve, backoff));
     }
 
-    const progress = new SingleBar({
-      format: `Leaderboard${pass > 0 ? ` retry ${pass}` : ""} [{bar}] {percentage}% | {value}/{total}`,
-    });
+    const progress = createProgress(`Leaderboard${pass > 0 ? ` retry ${pass}` : ""}`);
     progress.start(pending.length, 0);
 
     const failed: number[] = [];
@@ -272,7 +294,7 @@ async function main() {
   const onlineConcurrency = allAgents.length * 10;
   console.log(`Checking online status for all ${allUsers.length} players across ${allAgents.length} proxies (concurrency: ${onlineConcurrency})`);
 
-  const onlineProgress = new SingleBar({ format: "Online check [{bar}] {percentage}% | {value}/{total}" });
+  const onlineProgress = createProgress("Online check");
   let checked = 0;
   let onlineCount = 0;
   onlineProgress.start(allUsers.length, 0);
