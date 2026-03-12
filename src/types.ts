@@ -5,7 +5,6 @@ export type User = {
   image: string;
   link: string;
   points: string;
-  online: boolean;
 };
 
 export type LeaderboardData = {

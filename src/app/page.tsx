@@ -37,10 +37,6 @@ export default function Home() {
     return Math.ceil(users.length / PER_PAGE);
   }, [users]);
 
-  const onlineCount = React.useMemo(() => {
-    return users.filter((u) => u.online).length;
-  }, [users]);
-
   const favourites = favouriteState((state) => state.favourites);
   const [showFavourites, setShowFavourites] = React.useState(false);
 
@@ -70,12 +66,6 @@ export default function Home() {
           Risk Leaderboard{" "}
           <small>
             {updatedAt ? formatUpdatedAt(updatedAt) : "(Updated Hourly)"}
-            {onlineCount > 0 && (
-              <span style={{ display: "inline-flex", alignItems: "center", marginInlineStart: "0.75em" }}>
-                <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", backgroundColor: "#22c55e", marginInlineEnd: "0.3em", verticalAlign: "middle" }} />
-                {onlineCount} online
-              </span>
-            )}
           </small>
         </h1>
         <nav>
@@ -113,20 +103,7 @@ export default function Home() {
             return (
               <tr key={user.position}>
                 <td>{user.position}</td>
-                <td>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      backgroundColor: user.online ? "#22c55e" : "#6b7280",
-                      marginInlineEnd: "0.5em",
-                      verticalAlign: "middle",
-                    }}
-                  />
-                  {user.username}
-                </td>
+                <td>{user.username}</td>
                 <td>
                   <img src={user.image} alt={user.username} />
                 </td>
