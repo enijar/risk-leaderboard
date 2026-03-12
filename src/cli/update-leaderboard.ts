@@ -4,7 +4,7 @@ import { parse } from "node-html-parser";
 import { SingleBar } from "cli-progress";
 
 const MAX_PAGE = 100;
-const CRAWL_DELAY_MS = 30_000;
+const CRAWL_DELAY_MS = 10_000;
 const MAX_RETRIES = 3;
 
 function createProgress(label: string) {
